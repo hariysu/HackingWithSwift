@@ -14,19 +14,36 @@ struct ContentView: View {
     @State private var showingScore = false
     @State private var scoreTitle = ""
     
+    @State private var userScore = 0
+    @State private var userTapNumber = 0
+    
+    @State private var questionCount = 0
+    @State private var gameEnd = false
+    
     func flagTapped (_ number: Int) {
         if number == correctAnswer {
             scoreTitle = "Correct"
+            userScore += 1
         } else {
             scoreTitle = "Wrong"
         }
-        print(scoreTitle)
+        questionCount += 1
         showingScore = true
+        if questionCount == 8 {
+            showingScore = false
+            gameEnd = true
+        }
     }
     
     func askQuestion () {
         countries.shuffle()
         correctAnswer = Int.random(in: 0...2)
+    }
+    
+    func resetGame () {
+        userScore = 0
+        userTapNumber = 0
+        questionCount = 0
     }
     
     var body: some View {
@@ -35,24 +52,25 @@ struct ContentView: View {
                 .init(color: Color(red: 0.1, green: 0.2, blue: 0.45), location: 0.3),
                 .init(color: Color(red: 0.76, green: 0.15, blue: 0.26), location: 0.3),
             ], center: .top, startRadius: 200, endRadius: 400)
-                .ignoresSafeArea()
+            .ignoresSafeArea()
             VStack {
                 Spacer()
                 Text("Guess the Flag")
-                        .font(.largeTitle.weight(.bold))
-                        .foregroundStyle(.white)
+                    .font(.largeTitle.weight(.bold))
+                    .foregroundStyle(.white)
                 VStack (spacing: 15){
                     VStack {
                         Text("Tap the flag of")
                             .foregroundStyle(.secondary)
                             .font(.subheadline.weight(.heavy))
                         Text(countries[correctAnswer])
-                            //.foregroundStyle(.white)
+                        //.foregroundStyle(.white)
                             .font(.largeTitle.weight(.semibold))
                     }
                     ForEach(0..<3) { number in
                         Button {
                             flagTapped(number)
+                            userTapNumber = number
                         } label: {
                             Image(countries[number])
                                 .clipShape(.capsule)
@@ -66,7 +84,7 @@ struct ContentView: View {
                 .clipShape(.rect(cornerRadius: 20))
                 Spacer()
                 Spacer()
-                Text("Score: ???")
+                Text("Score: \(userScore)")
                     .foregroundStyle(.white)
                     .font(.title.bold())
                 Spacer()
@@ -76,7 +94,17 @@ struct ContentView: View {
         .alert(scoreTitle, isPresented: $showingScore) {
             Button("Continue", action: askQuestion)
         } message: {
-            Text("You score is ???")
+            if scoreTitle == "Correct" {
+                Text("You score is \(userScore)")
+            }
+            else {
+                Text("Wrong! That’s the flag of \(countries[userTapNumber])")
+            }
+        }
+        .alert("Game Over", isPresented: $gameEnd) {
+            Button("Reset", action: resetGame)
+        } message: {
+            Text("Final score is \(userScore)")
         }
     }
 }
