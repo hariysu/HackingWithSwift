@@ -46,6 +46,7 @@ struct ContentView: View {
         questionCount = 0
     }
     
+    
     var body: some View {
         ZStack {
             RadialGradient(stops: [
@@ -72,9 +73,7 @@ struct ContentView: View {
                             flagTapped(number)
                             userTapNumber = number
                         } label: {
-                            Image(countries[number])
-                                .clipShape(.capsule)
-                                .shadow(radius: 5)
+                            FlagImage(country: countries[number])
                         }
                     }
                 }
@@ -106,6 +105,16 @@ struct ContentView: View {
         } message: {
             Text("Final score is \(userScore)")
         }
+    }
+}
+
+struct FlagImage: View {
+    var country: String
+
+    var body: some View {
+        Image(country)
+            .clipShape(.capsule)
+            .shadow(radius: 5)
     }
 }
 
