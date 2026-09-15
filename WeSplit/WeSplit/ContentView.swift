@@ -62,6 +62,7 @@ struct ContentView: View {
                 }
                 Section("Total amount") {
                     Text((checkAmount + checkAmount / 100 * Double(tipPercentage)), format: .currency(code: Locale.current.currency?.identifier ?? "USD"))
+                        .background(tipPercentage == 0 ? .red : .white)
                 }
             }
             .navigationTitle("WeSplit")
