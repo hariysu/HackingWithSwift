@@ -70,11 +70,9 @@ struct ContentView: View {
                 }
             }
             Spacer()
-            Text("Round: \(round)")
-                .foregroundStyle(.black)
+            Text("Round: \(round)/\(totalRounds)")
                 .font(.title.italic())
             Text("Score: \(score)")
-                .foregroundStyle(.black)
                 .font(.title.bold())
             Spacer()
         }
@@ -84,7 +82,7 @@ struct ContentView: View {
             Text("Your score is \(score)")
         }
         .alert("Game Over", isPresented: $showingGameOver){
-            Button("Reset", action: resetGame)
+            Button("Play again", action: resetGame)
         } message: {
             Text("Final score is \(score)")
         }
